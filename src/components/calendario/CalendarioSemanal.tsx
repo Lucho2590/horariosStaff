@@ -5,7 +5,13 @@ import { AsignacionConDetalles } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight, Clock, Plus } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ChevronLeft, ChevronRight, Clock, Plus, MoreVertical, Edit, Trash } from 'lucide-react';
 import { DIAS_SEMANA } from '@/types';
 
 interface CalendarioSemanalProps {
@@ -14,6 +20,7 @@ interface CalendarioSemanalProps {
   onSemanaChange: (nuevaSemana: Date) => void;
   onCrearTurno: (fecha: Date) => void;
   onEditarTurno: (asignacion: AsignacionConDetalles) => void;
+  onEliminarTurno: (asignacion: AsignacionConDetalles) => void;
 }
 
 export function CalendarioSemanal({
@@ -22,6 +29,7 @@ export function CalendarioSemanal({
   onSemanaChange,
   onCrearTurno,
   onEditarTurno,
+  onEliminarTurno,
 }: CalendarioSemanalProps) {
   // Generar los 7 días de la semana (lunes a domingo)
   const diasSemana = Array.from({ length: 7 }, (_, i) => {
@@ -152,18 +160,42 @@ export function CalendarioSemanal({
                       {turnos.map((turno) => (
                         <Card
                           key={turno.id}
-                          className="cursor-pointer hover:shadow-md transition-shadow"
-                          onClick={() => onEditarTurno(turno)}
+                          className="hover:shadow-md transition-shadow"
                         >
                           <CardContent className="p-3">
-                            <p className="font-medium text-sm truncate">
-                              {turno.personal?.nombre} {turno.personal?.apellido}
-                            </p>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                              <Clock className="h-3 w-3" />
-                              <span>
-                                {turno.horaInicio} - {turno.horaFin}
-                              </span>
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm truncate">
+                                  {turno.personal?.nombre} {turno.personal?.apellido}
+                                </p>
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                                  <Clock className="h-3 w-3" />
+                                  <span>
+                                    {turno.horaInicio} - {turno.horaFin}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 -mt-1">
+                                    <MoreVertical className="h-3 w-3" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={() => onEditarTurno(turno)} className="cursor-pointer">
+                                    <Edit className="mr-2 h-3 w-3" />
+                                    Editar
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => onEliminarTurno(turno)}
+                                    className="cursor-pointer text-red-600"
+                                  >
+                                    <Trash className="mr-2 h-3 w-3" />
+                                    Eliminar
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                             </div>
                           </CardContent>
                         </Card>
@@ -223,17 +255,41 @@ export function CalendarioSemanal({
                     {turnos.map((turno) => (
                       <div
                         key={turno.id}
-                        className="p-3 rounded-lg border hover:bg-slate-50 transition-colors cursor-pointer"
-                        onClick={() => onEditarTurno(turno)}
+                        className="p-3 rounded-lg border hover:bg-slate-50 transition-colors"
                       >
-                        <p className="font-medium text-sm">
-                          {turno.personal?.nombre} {turno.personal?.apellido}
-                        </p>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                          <Clock className="h-3 w-3" />
-                          <span>
-                            {turno.horaInicio} - {turno.horaFin}
-                          </span>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm">
+                              {turno.personal?.nombre} {turno.personal?.apellido}
+                            </p>
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                              <Clock className="h-3 w-3" />
+                              <span>
+                                {turno.horaInicio} - {turno.horaFin}
+                              </span>
+                            </div>
+                          </div>
+
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => onEditarTurno(turno)} className="cursor-pointer">
+                                <Edit className="mr-2 h-4 w-4" />
+                                Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => onEliminarTurno(turno)}
+                                className="cursor-pointer text-red-600"
+                              >
+                                <Trash className="mr-2 h-4 w-4" />
+                                Eliminar
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     ))}

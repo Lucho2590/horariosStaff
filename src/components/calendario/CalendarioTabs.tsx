@@ -284,6 +284,7 @@ export function CalendarioTabs() {
                 onSemanaChange={setSemanaActual}
                 onCrearTurno={handleCreate}
                 onEditarTurno={handleEdit}
+                onEliminarTurno={handleDeleteClick}
               />
             )}
           </TabsContent>
