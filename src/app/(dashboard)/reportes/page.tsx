@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Clock, TrendingUp, Users, Calendar, MessageCircle, Copy, History, Trash2, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
-import { DIAS_SEMANA } from '@/types';
+import { DIAS_SEMANA, Personal } from '@/types';
 import { generarMensajeHorario, enviarPorWhatsApp, copiarAlPortapapeles } from '@/lib/whatsapp';
 import { Button } from '@/components/ui/button';
 import {

@@ -39,6 +39,7 @@ import { useTurnos } from '@/hooks/useTurnos';
 import { useSnapshots } from '@/hooks/useSnapshots';
 import { useAuth } from '@/hooks/useAuth';
 import { createAuditLog } from '@/lib/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { toast } from 'sonner';
 
 // Función helper para obtener el lunes de una semana
@@ -149,16 +150,24 @@ export function CalendarioTabs() {
   };
 
   const handleSubmit = async (data: { personalId: string; localeId: string; fecha: Date; horaInicio: string; horaFin: string; activo: boolean }) => {
+    const dataConTimestamp = {
+      ...data,
+      fecha: Timestamp.fromDate(data.fecha),
+    };
+
     if (formMode === 'create') {
-      await addAsignacion(data);
+      await addAsignacion(dataConTimestamp);
     } else if (selectedAsignacion) {
-      await editAsignacion(selectedAsignacion.id, data);
+      await editAsignacion(selectedAsignacion.id, dataConTimestamp);
     }
   };
 
   const handleSemanaCompleta = async (asignaciones: { personalId: string; localeId: string; fecha: Date; horaInicio: string; horaFin: string; activo: boolean }[]) => {
-    // Crear todas las asignaciones en paralelo
-    await Promise.all(asignaciones.map(data => addAsignacion(data)));
+    // Convertir fechas a Timestamp y crear todas las asignaciones en paralelo
+    await Promise.all(asignaciones.map(data => addAsignacion({
+      ...data,
+      fecha: Timestamp.fromDate(data.fecha),
+    })));
 
     // Crear audit log para la semana completa
     if (user) {
